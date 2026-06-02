@@ -11,30 +11,42 @@ const CreateTask = () => {
     const [asignTo, setAsignTo] = useState('')
     const [category, setCategory] = useState('')
 
-    const [newTask, setNewTask] = useState({})
-
     const submitHandler = (e) => {
         e.preventDefault()
 
-        setNewTask({ taskTitle, taskDescription, taskDate, category, active: false, newTask: true, failed: false, completed: false })
+        const taskObj = { 
+            taskTitle, 
+            taskDescription, 
+            taskDate, 
+            category, 
+            active: false, 
+            newTask: true, 
+            failed: false, 
+            completed: false 
+        }
 
-        const data = userData
-
-        data.forEach(function (elem) {
-            if (asignTo == elem.firstName) {
-                elem.tasks.push(newTask)
-                elem.taskCounts.newTask = elem.taskCounts.newTask + 1
+        const updatedData = userData.map((elem) => {
+            if (elem.firstName.toLowerCase() === asignTo.trim().toLowerCase()) {
+                return {
+                    ...elem,
+                    tasks: [...elem.tasks, taskObj],
+                    taskCounts: {
+                        ...elem.taskCounts,
+                        newTask: elem.taskCounts.newTask + 1
+                    }
+                }
             }
+            return elem
         })
-        setUserData(data)
-        console.log(data);
+
+        setUserData(updatedData)
+        localStorage.setItem('employees', JSON.stringify(updatedData))
 
         setTaskTitle('')
         setCategory('')
         setAsignTo('')
         setTaskDate('')
         setTaskDescription('')
-
     }
 
     return (
