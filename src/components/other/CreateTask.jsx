@@ -1,113 +1,120 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthProvider'
+import Card from '../ui/Card'
+import Input from '../ui/Input'
+import TextArea from '../ui/TextArea'
+import Select from '../ui/Select'
+import Button from '../ui/Button'
 
 const CreateTask = () => {
+  const [userData, setUserData] = useContext(AuthContext)
 
-    const [userData, setUserData] = useContext(AuthContext)
+  const [taskTitle, setTaskTitle] = useState('')
+  const [taskDescription, setTaskDescription] = useState('')
+  const [taskDate, setTaskDate] = useState('')
+  const [asignTo, setAsignTo] = useState('')
+  const [category, setCategory] = useState('')
 
-    const [taskTitle, setTaskTitle] = useState('')
-    const [taskDescription, setTaskDescription] = useState('')
-    const [taskDate, setTaskDate] = useState('')
-    const [asignTo, setAsignTo] = useState('')
-    const [category, setCategory] = useState('')
+  const submitHandler = (e) => {
+    e.preventDefault()
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-
-        const taskObj = { 
-            taskTitle, 
-            taskDescription, 
-            taskDate, 
-            category, 
-            active: false, 
-            newTask: true, 
-            failed: false, 
-            completed: false 
-        }
-
-        const updatedData = userData.map((elem) => {
-            if (elem.firstName.toLowerCase() === asignTo.trim().toLowerCase()) {
-                return {
-                    ...elem,
-                    tasks: [...elem.tasks, taskObj],
-                    taskCounts: {
-                        ...elem.taskCounts,
-                        newTask: elem.taskCounts.newTask + 1
-                    }
-                }
-            }
-            return elem
-        })
-
-        setUserData(updatedData)
-        localStorage.setItem('employees', JSON.stringify(updatedData))
-
-        setTaskTitle('')
-        setCategory('')
-        setAsignTo('')
-        setTaskDate('')
-        setTaskDescription('')
+    const taskObj = { 
+      taskTitle, 
+      taskDescription, 
+      taskDate, 
+      category, 
+      active: false, 
+      newTask: true, 
+      failed: false, 
+      completed: false 
     }
 
-    return (
-        <div className='p-5 bg-[#1c1c1c] mt-5 rounded'>
-            <form onSubmit={(e) => {
-                submitHandler(e)
-            }}
-                className='flex flex-wrap w-full items-start justify-between'
-            >
-                <div className='w-1/2'>
-                    <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Task Title</h3>
-                        <input
-                            value={taskTitle}
-                            onChange={(e) => {
-                                setTaskTitle(e.target.value)
-                            }}
-                            className='text-sm py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='Make a UI design'
-                        />
-                    </div>
-                    <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Date</h3>
-                        <input
-                            value={taskDate}
-                            onChange={(e) => {
-                                setTaskDate(e.target.value)
-                            }}
-                            className='text-sm py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="date" />
-                    </div>
-                    <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Asign to</h3>
-                        <input
-                            value={asignTo}
-                            onChange={(e) => {
-                                setAsignTo(e.target.value)
-                            }}
-                            className='text-sm py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='employee name' />
-                    </div>
-                    <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Category</h3>
-                        <input
-                            value={category}
-                            onChange={(e) => {
-                                setCategory(e.target.value)
-                            }}
-                            className='text-sm py-1 px-2 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='design, dev, etc' />
-                    </div>
-                </div>
+    const updatedData = userData.map((elem) => {
+      if (elem.firstName.toLowerCase() === asignTo.trim().toLowerCase()) {
+        return {
+          ...elem,
+          tasks: [...elem.tasks, taskObj],
+          taskCounts: {
+            ...elem.taskCounts,
+            newTask: elem.taskCounts.newTask + 1
+          }
+        }
+      }
+      return elem
+    })
 
-                <div className='w-2/5 flex flex-col items-start'>
-                    <h3 className='text-sm text-gray-300 mb-0.5'>Description</h3>
-                    <textarea value={taskDescription}
-                        onChange={(e) => {
-                            setTaskDescription(e.target.value)
-                        }} className='w-full h-44 text-sm py-2 px-4 rounded outline-none bg-transparent border-[1px] border-gray-400' name="" id=""></textarea>
-                    <button className='bg-emerald-500 py-3 hover:bg-emerald-600 px-5 rounded text-sm mt-4 w-full'>Create Task</button>
-                </div>
+    setUserData(updatedData)
+    localStorage.setItem('employees', JSON.stringify(updatedData))
 
-            </form>
-        </div>
-    )
+    setTaskTitle('')
+    setCategory('')
+    setAsignTo('')
+    setTaskDate('')
+    setTaskDescription('')
+  }
+
+  const employeeOptions = userData 
+    ? userData.map((emp) => ({ value: emp.firstName, label: emp.firstName }))
+    : []
+
+  return (
+    <Card title="Create New Task" description="Assign a new task to an employee.">
+      <form onSubmit={submitHandler} className="space-y-4">
+        <Input
+          id="taskTitle"
+          type="text"
+          label="Task Title"
+          required
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
+          placeholder="e.g. Redesign landing page"
+        />
+
+        <Input
+          id="taskDate"
+          type="date"
+          label="Due Date"
+          required
+          value={taskDate}
+          onChange={(e) => setTaskDate(e.target.value)}
+        />
+
+        <Select
+          id="asignTo"
+          label="Assign To"
+          required
+          value={asignTo}
+          onChange={(e) => setAsignTo(e.target.value)}
+          placeholder="Select employee"
+          options={employeeOptions}
+        />
+
+        <Input
+          id="category"
+          type="text"
+          label="Category"
+          required
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="e.g. Design, Dev, Marketing"
+        />
+
+        <TextArea
+          id="taskDescription"
+          label="Description"
+          required
+          value={taskDescription}
+          onChange={(e) => setTaskDescription(e.target.value)}
+          placeholder="Provide details on the goals and deliverables..."
+          rows={4}
+        />
+
+        <Button type="submit" variant="primary" className="w-full justify-center">
+          Create Task
+        </Button>
+      </form>
+    </Card>
+  )
 }
 
 export default CreateTask

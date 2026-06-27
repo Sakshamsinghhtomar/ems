@@ -1,21 +1,45 @@
 import React from 'react'
+import Card from '../ui/Card'
+import Badge from '../ui/Badge'
+import Button from '../ui/Button'
 
-const AcceptTask = ({data, updateTaskStatus}) => {
+const AcceptTask = ({ data, updateTaskStatus }) => {
   return (
-    <div className='flex-shrink-0 h-full w-[300px] p-5 bg-red-400 rounded-xl'>
-            <div className='flex justify-between items-center'>
-                <h3 className='bg-red-600 text-sm px-3 py-1 rounded'>{data.category}</h3>
-                <h4 className='text-sm'>{data.taskDate}</h4>
-            </div>
-            <h2 className='mt-5 text-2xl font-semibold'>{data.taskTitle}</h2>
-            <p className='text-sm mt-2'>
-                {data.taskDescription}
-            </p>
-            <div className='flex justify-between mt-6 '>
-                <button onClick={() => updateTaskStatus(data.taskTitle, 'complete')} className='bg-green-500 rounded font-medium py-1 px-2 text-xs'>Mark as Completed</button>
-                <button onClick={() => updateTaskStatus(data.taskTitle, 'fail')} className='bg-red-500 rounded font-medium py-1 px-2 text-xs'>Mark as Failed</button>
-            </div>
+    <Card className="flex flex-col justify-between hover:shadow-md transition-all duration-200">
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <Badge variant="primary">{data.category}</Badge>
+          <span className="text-xs font-semibold text-slate-400">{data.taskDate}</span>
         </div>
+        <div>
+          <h4 className="text-base font-bold text-slate-900 tracking-tight">{data.taskTitle}</h4>
+          <p className="text-sm text-slate-500 mt-1.5 leading-relaxed">{data.taskDescription}</p>
+        </div>
+      </div>
+      <div className="mt-6 border-t border-slate-100 pt-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <Badge variant="warning">Active</Badge>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => updateTaskStatus(data.taskTitle, 'complete')}
+            size="sm"
+            variant="success"
+            className="flex-1"
+          >
+            Complete
+          </Button>
+          <Button
+            onClick={() => updateTaskStatus(data.taskTitle, 'fail')}
+            size="sm"
+            variant="danger"
+            className="flex-1"
+          >
+            Fail
+          </Button>
+        </div>
+      </div>
+    </Card>
   )
 }
 

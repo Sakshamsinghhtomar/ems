@@ -1,34 +1,61 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../../context/AuthProvider'
+import Card from '../ui/Card'
+import Badge from '../ui/Badge'
 
 const AllTask = () => {
+  const [userData] = useContext(AuthContext)
 
-   const [userData,setUserData] =  useContext(AuthContext)
-
-   
   return (
-    <div className='bg-[#1c1c1c] p-5 rounded mt-5'>
-        <div className='bg-red-400 mb-2 py-2 px-4 flex justify-between rounded'>
-            <h2 className='text-lg font-medium w-1/5'>Employee Name</h2>
-            <h3 className='text-lg font-medium w-1/5'>New Task</h3>
-            <h5 className='text-lg font-medium w-1/5'>Active Task</h5>
-            <h5 className='text-lg font-medium w-1/5'>Completed</h5>
-            <h5 className='text-lg font-medium w-1/5'>Failed</h5>
-        </div>
-        <div className=''>
-        {userData.map(function(elem,idx){
-            return <div key={idx} className='border-2 border-emerald-500 mb-2 py-2 px-4 flex justify-between rounded'>
-            <h2 className='text-lg font-medium  w-1/5'>{elem.firstName}</h2>
-            <h3 className='text-lg font-medium w-1/5 text-blue-400'>{elem.taskCounts.newTask}</h3>
-            <h5 className='text-lg font-medium w-1/5 text-yellow-400'>{elem.taskCounts.active}</h5>
-            <h5 className='text-lg font-medium w-1/5 text-white'>{elem.taskCounts.completed}</h5>
-            <h5 className='text-lg font-medium w-1/5 text-red-600'>{elem.taskCounts.failed}</h5>
-        </div>
-        })}
-        </div>
-        
-        
-    </div>
+    <Card title="Employee Tasks Directory" description="Real-time summary of workloads and progress across your team.">
+      <div className="overflow-x-auto -mx-6 -my-6">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-slate-200/80 bg-slate-50/50">
+              <th className="py-3 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Employee</th>
+              <th className="py-3 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">New</th>
+              <th className="py-3 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Active</th>
+              <th className="py-3 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Completed</th>
+              <th className="py-3 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Failed</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {userData.map((elem, idx) => (
+              <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
+                <td className="py-3.5 px-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 font-bold text-indigo-700 text-xs">
+                      {elem.firstName.substring(0, 2).toUpperCase()}
+                    </div>
+                    <span className="font-semibold text-slate-900 text-sm">{elem.firstName}</span>
+                  </div>
+                </td>
+                <td className="py-3.5 px-6 text-center">
+                  <Badge variant="info" className="min-w-[2rem] justify-center">
+                    {elem.taskCounts.newTask}
+                  </Badge>
+                </td>
+                <td className="py-3.5 px-6 text-center">
+                  <Badge variant="warning" className="min-w-[2rem] justify-center">
+                    {elem.taskCounts.active}
+                  </Badge>
+                </td>
+                <td className="py-3.5 px-6 text-center">
+                  <Badge variant="success" className="min-w-[2rem] justify-center">
+                    {elem.taskCounts.completed}
+                  </Badge>
+                </td>
+                <td className="py-3.5 px-6 text-center">
+                  <Badge variant="danger" className="min-w-[2rem] justify-center">
+                    {elem.taskCounts.failed}
+                  </Badge>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
   )
 }
 
